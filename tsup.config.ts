@@ -16,7 +16,8 @@ export default defineConfig({
   external: ['react', 'react-dom', 'vue'],
   treeshake: true,
   loader: {
-    '.svg': 'dataurl'
+    // emit SVG as separate static files and reference them from JS
+    '.svg': 'file'
   }
 });
 
