@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["ES2019", "DOM"],
+    "strict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@bg-follow-season/core": ["src/core"],
+      "@bg-follow-season/react": ["src/react"],
+      "@bg-follow-season/vue": ["src/vue"]
+    },
+    "outDir": "dist"
+  },
+  "include": ["src", "docs"]
+}
+
+

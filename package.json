@@ -1,0 +1,56 @@
+{
+  "name": "bg-follow-season",
+  "version": "1.0.0",
+  "description": "Seasonal background animation library for HTML/JS, React (TS), and Vue (TS).",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "vite docs",
+    "preview": "vite preview docs",
+    "lint": "eslint \"src/**/*.{ts,tsx,vue}\"",
+    "test": "echo \"No tests yet\""
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thangdevalone/bg-follow-season.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thangdevalone/bg-follow-season/issues"
+  },
+  "homepage": "https://github.com/thangdevalone/bg-follow-season#readme",
+  "keywords": [
+    "background",
+    "season",
+    "animation",
+    "react",
+    "vue",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.12.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0",
+    "vue": "^3.5.0"
+  }
+}
