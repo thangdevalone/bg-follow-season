@@ -10,27 +10,39 @@ export interface SeasonTheme {
 export const SEASON_THEMES: Record<Season, SeasonTheme> = {
   spring: {
     name: 'spring',
-    background: 'linear-gradient(135deg, #f0fff4, #c6f6d5)',
-    accent: '#38a169',
-    particleColor: 'rgba(72, 187, 120, 0.9)'
+    // stylized forest canopy + light sky (no external images)
+    background:
+      'linear-gradient(180deg, #e0ffe9 0%, #c0f5d4 30%, #8adea3 55%, #3f7c4f 78%, #122015 100%)',
+    accent: '#16a34a',
+    // floating petals / pollen
+    particleColor: 'rgba(74, 222, 128, 0.9)'
   },
   summer: {
     name: 'summer',
-    background: 'linear-gradient(135deg, #ebf8ff, #bee3f8)',
-    accent: '#3182ce',
-    particleColor: 'rgba(66, 153, 225, 0.9)'
+    // bright sky + lake/treeline feel
+    background:
+      'linear-gradient(180deg, #dbeafe 0%, #93c5fd 30%, #38bdf8 52%, #22c55e 76%, #052e16 100%)',
+    accent: '#0ea5e9',
+    // tiny dust motes / fireflies
+    particleColor: 'rgba(56, 189, 248, 0.95)'
   },
   autumn: {
     name: 'autumn',
-    background: 'linear-gradient(135deg, #fffaf0, #fefcbf)',
-    accent: '#dd6b20',
-    particleColor: 'rgba(237, 137, 54, 0.9)'
+    // golden forest
+    background:
+      'linear-gradient(180deg, #fef9c3 0%, #fed7aa 30%, #fb923c 52%, #b45309 76%, #431407 100%)',
+    accent: '#f97316',
+    // falling leaves
+    particleColor: 'rgba(245, 158, 11, 0.95)'
   },
   winter: {
     name: 'winter',
-    background: 'linear-gradient(135deg, #edf2f7, #e2e8f0)',
-    accent: '#2d3748',
-    particleColor: 'rgba(160, 174, 192, 0.9)'
+    // snowy forest + cold sky
+    background:
+      'linear-gradient(180deg, #e5f0ff 0%, #bfdbfe 28%, #60a5fa 52%, #1e293b 78%, #020617 100%)',
+    accent: '#1d4ed8',
+    // snow flakes
+    particleColor: 'rgba(226, 232, 240, 0.98)'
   }
 };
 

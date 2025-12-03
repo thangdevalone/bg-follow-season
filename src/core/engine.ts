@@ -1,9 +1,15 @@
 import { SEASON_THEMES, Season } from './seasons';
+import springBg from '../assets/spring.svg';
+import summerBg from '../assets/summer.svg';
+import autumnBg from '../assets/autumn.svg';
+import winterBg from '../assets/winter.svg';
 
 export interface BgFollowSeasonOptions {
   season?: Season;
   autoSeason?: boolean;
-  fps?: number;
+  /**
+   * Approximate number of leaf/snow particles.
+   */
   particleCount?: number;
 }
 
@@ -14,8 +20,25 @@ export interface BgFollowSeasonInstance {
 
 const DEFAULT_OPTIONS: Required<Omit<BgFollowSeasonOptions, 'season'>> = {
   autoSeason: true,
-  fps: 30,
-  particleCount: 40
+  particleCount: 80
+};
+
+const SEASON_BACKGROUNDS: Record<Season, string> = {
+  spring: springBg,
+  summer: summerBg,
+  autumn: autumnBg,
+  winter: winterBg
+};
+
+type LeafParticle = {
+  el: HTMLDivElement;
+  x: number;
+  y: number;
+  speedY: number;
+  driftX: number;
+  rotation: number;
+  rotationSpeed: number;
+  size: number;
 };
 
 export function detectSeasonByDate(date = new Date()): Season {
@@ -46,91 +69,155 @@ export function createSeasonalBackground(
 
   el.style.position = el.style.position || 'relative';
   el.style.overflow = 'hidden';
-  el.style.backgroundImage = theme().background;
-  el.style.transition = 'background-image 400ms ease-out';
 
-  const canvas = document.createElement('canvas');
-  canvas.style.position = 'absolute';
-  canvas.style.inset = '0';
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  canvas.style.pointerEvents = 'none';
-  canvas.style.zIndex = '-1';
-
-  el.prepend(canvas);
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    throw new Error('[bg-follow-season] Canvas 2D context not available');
-  }
-
-  let width = 0;
-  let height = 0;
-
-  const resize = () => {
-    const rect = el.getBoundingClientRect();
-    width = rect.width;
-    height = rect.height;
-    canvas.width = width * window.devicePixelRatio;
-    canvas.height = height * window.devicePixelRatio;
-    ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+  const applyBackground = () => {
+    const img = SEASON_BACKGROUNDS[season];
+    el.style.backgroundImage = `url('${img}')`;
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+    el.style.backgroundRepeat = 'no-repeat';
+    el.style.backgroundColor = '#020617';
   };
 
-  resize();
+  applyBackground();
 
-  const particles = Array.from({ length: merged.particleCount }, () => ({
-    x: Math.random() * width,
-    y: Math.random() * height,
-    size: 2 + Math.random() * 3,
-    speedY: 0.3 + Math.random() * 1.5,
-    driftX: -0.5 + Math.random()
-  }));
+  const leafLayer = document.createElement('div');
+  leafLayer.style.position = 'absolute';
+  leafLayer.style.inset = '0';
+  leafLayer.style.pointerEvents = 'none';
+  leafLayer.style.overflow = 'hidden';
+  // no explicit z-index so it stays *behind* normal content:
+  // we prepend this layer, so later children (your UI) paint on top.
 
-  let frameId: number | null = null;
-  let lastTime = 0;
-  const frameInterval = 1000 / merged.fps;
+  el.prepend(leafLayer);
 
-  const render = (time: number) => {
-    frameId = window.requestAnimationFrame(render);
-    const delta = time - lastTime;
-    if (delta < frameInterval) return;
-    lastTime = time;
+  let particles: LeafParticle[] = [];
+  let animationFrame: number | null = null;
+  let viewportHeight = el.clientHeight;
+  let viewportWidth = el.clientWidth;
 
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = theme().particleColor;
+  const measure = () => {
+    const rect = el.getBoundingClientRect();
+    viewportHeight = rect.height;
+    viewportWidth = rect.width;
+  };
 
-    for (const p of particles) {
-      p.y += p.speedY;
-      p.x += p.driftX;
+  const spawnLeaves = () => {
+    leafLayer.innerHTML = '';
+    particles = [];
+    measure();
+    const count = merged.particleCount;
+    for (let i = 0; i < count; i++) {
+      const leaf = document.createElement('div');
+      leaf.style.position = 'absolute';
+      leaf.style.top = '0';
+      leaf.style.left = '0';
+      leaf.style.pointerEvents = 'none';
+      leaf.style.willChange = 'transform, opacity';
 
-      if (p.y > height + 10) {
-        p.y = -10;
-        p.x = Math.random() * width;
+      // smaller, season‑specific sizing
+      const size =
+        season === 'winter'
+          ? 10 + Math.random() * 8 // snow
+          : season === 'autumn'
+          ? 10 + Math.random() * 6 // leaves
+          : 8 + Math.random() * 6; // spring petals / summer dust
+      leaf.style.width = `${size}px`;
+      leaf.style.height = `${size}px`;
+
+      // shape & color per season
+      switch (season) {
+        case 'spring': {
+          // soft petal: small capsule, slightly diagonal
+          leaf.style.background = '#fecaca';
+          leaf.style.borderRadius = `${size}px`;
+          leaf.style.boxShadow = '0 0 4px rgba(248,113,113,0.5)';
+          leaf.style.transform = 'rotate(18deg)';
+          break;
+        }
+        case 'summer': {
+          // sun-dust: short warm streak
+          leaf.style.background = 'linear-gradient(90deg, #fde68a, #facc15)';
+          leaf.style.borderRadius = '999px';
+          leaf.style.boxShadow = '0 0 5px rgba(250,204,21,0.5)';
+          leaf.style.transform = 'rotate(8deg)';
+          break;
+        }
+        case 'autumn': {
+          // tiny leaf: thin rotated rectangle
+          leaf.style.background = 'linear-gradient(135deg, #f97316, #b45309)';
+          leaf.style.borderRadius = '3px';
+          leaf.style.transform = 'rotate(32deg)';
+          break;
+        }
+        case 'winter': {
+          // bright snow: only one that is circular
+          leaf.style.background = 'rgba(248,250,252,0.96)';
+          leaf.style.borderRadius = '999px';
+          leaf.style.boxShadow = '0 0 8px rgba(248,250,252,0.8)';
+          break;
+        }
       }
 
-      if (p.x < -10) p.x = width + 10;
-      if (p.x > width + 10) p.x = -10;
+      const baseOpacity =
+        season === 'summer' ? 0.75 : season === 'winter' ? 0.98 : season === 'autumn' ? 0.9 : 0.85;
 
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
+      leaf.style.opacity = String(baseOpacity);
+
+      leafLayer.appendChild(leaf);
+
+      particles.push({
+        el: leaf,
+        x: Math.random() * viewportWidth,
+        y: Math.random() * viewportHeight,
+        speedY:
+          season === 'winter'
+            ? 0.4 + Math.random() * 0.6
+            : season === 'autumn'
+            ? 0.9 + Math.random() * 1.3
+            : 0.6 + Math.random() * 0.9,
+        driftX: (Math.random() - 0.5) * (season === 'winter' ? 0.4 : 1.1),
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * (season === 'winter' ? 0.2 : 0.5),
+        size
+      });
     }
   };
 
-  frameId = window.requestAnimationFrame(render);
-  window.addEventListener('resize', resize);
+  spawnLeaves();
+
+  const animate = () => {
+    animationFrame = window.requestAnimationFrame(animate);
+    for (const particle of particles) {
+      particle.y += particle.speedY;
+      particle.x += particle.driftX;
+      particle.rotation += particle.rotationSpeed;
+
+      if (particle.y > viewportHeight + 40) {
+        particle.y = -40;
+        particle.x = Math.random() * viewportWidth;
+      }
+
+      if (particle.x < -40) particle.x = viewportWidth + 20;
+      if (particle.x > viewportWidth + 40) particle.x = -20;
+
+      particle.el.style.transform = `translate3d(${particle.x}px, ${particle.y}px, 0) rotate(${particle.rotation}deg)`;
+    }
+  };
+
+  animate();
+  window.addEventListener('resize', measure);
 
   return {
     setSeason(next: Season) {
       season = next;
-      el.style.backgroundImage = theme().background;
+      applyBackground();
+      spawnLeaves();
     },
     destroy() {
-      if (frameId != null) cancelAnimationFrame(frameId);
-      window.removeEventListener('resize', resize);
-      canvas.remove();
+      if (animationFrame != null) cancelAnimationFrame(animationFrame);
+      window.removeEventListener('resize', measure);
+      leafLayer.remove();
     }
   };
 }
-
-

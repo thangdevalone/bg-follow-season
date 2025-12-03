@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Season, SEASON_THEMES } from '@bg-follow-season/core';
-import { SeasonBackground } from '@bg-follow-season/react';
+import { Season, SEASON_THEMES, SeasonBackground } from 'bg-follow-season';
 
 const seasons: Season[] = ['spring', 'summer', 'autumn', 'winter'];
 
@@ -51,23 +50,68 @@ const App: React.FC = () => {
       </header>
 
       <main className="flex-1">
-        <div className="max-w-5xl mx-auto px-6 py-10 grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-          <section className="space-y-6">
-            <div className="rounded-2xl border border-white/10 bg-slate-950/65 backdrop-blur p-6 shadow-2xl shadow-black/50">
-              <h2 className="text-lg font-semibold mb-2">What is this?</h2>
-              <p className="text-sm text-slate-200">
-                <strong>bg-follow-season</strong> is a tiny library that paints a soft, animated
-                seasonal background behind any container. Use it directly in{' '}
-                <strong>HTML/JS</strong>, or drop in the ready-made <strong>React</strong> and{' '}
-                <strong>Vue</strong> bindings.
-              </p>
-              <p className="text-xs text-slate-300 mt-3">
-                The animation runs on a lightweight canvas layer, tuned for smoothness and minimal
-                re-renders.
-              </p>
-            </div>
+        <div className="max-w-5xl mx-auto px-6 py-10 space-y-8">
+          <div className="grid gap-6 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] items-start">
+            <section className="space-y-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/70 backdrop-blur p-6 shadow-2xl shadow-black/50">
+                <h2 className="text-lg font-semibold mb-2">What is this?</h2>
+                <p className="text-sm text-slate-200">
+                  <strong>bg-follow-season</strong> paints a layered seasonal scene behind your UI –
+                  tree lines, ground, and animated particles that feel like{' '}
+                  <strong>spring petals</strong>, <strong>summer fireflies</strong>,{' '}
+                  <strong>autumn leaves</strong>, or <strong>winter snow</strong>.
+                </p>
+                <p className="text-xs text-slate-300 mt-3">
+                  It runs on a single canvas layer, tuned for low GC pressure and capped FPS so your
+                  components stay smooth.
+                </p>
+              </div>
+            </section>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <aside className="space-y-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/70 backdrop-blur p-5">
+                <h3 className="text-sm font-semibold mb-3">Install</h3>
+                <CodeBlock
+                  code={`npm install bg-follow-season
+# or
+yarn add bg-follow-season
+pnpm add bg-follow-season`}
+                />
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-slate-950/70 backdrop-blur p-5">
+                <h3 className="text-sm font-semibold mb-2">Options</h3>
+                <ul className="text-xs text-slate-200 space-y-1">
+                  <li>
+                    <code className="text-amber-200">season</code> – <code>spring | summer | autumn |
+                      winter</code>
+                  </li>
+                  <li>
+                    <code className="text-amber-200">autoSeason</code> – infer from current date
+                  </li>
+                  <li>
+                    <code className="text-amber-200">particleCount</code> – density of particles
+                  </li>
+                  <li>
+                    <code className="text-amber-200">fps</code> – max frames per second
+                  </li>
+                </ul>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-slate-950/70 backdrop-blur p-5">
+                <h3 className="text-sm font-semibold mb-2">HTML-only quick start</h3>
+                <CodeBlock
+                  code={`<div id="hero" style="min-height:100vh;"></div>
+<script type="module">
+  import { createSeasonalBackground } from 'https://esm.run/bg-follow-season';
+  createSeasonalBackground('#hero');
+</script>`}
+                />
+              </div>
+            </aside>
+          </div>
+
+          <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <DocCard
                 title="HTML / JavaScript"
                 subtitle="Use anywhere with a single helper."
@@ -128,50 +172,7 @@ import { ref } from 'vue';
 const season = ref<'spring' | 'summer' | 'autumn' | 'winter'>('spring');
 </script>`}
               />
-            </div>
           </section>
-
-          <aside className="space-y-4">
-            <div className="rounded-2xl border border-white/10 bg-slate-950/65 backdrop-blur p-5">
-              <h3 className="text-sm font-semibold mb-3">Install</h3>
-              <CodeBlock
-                code={`npm install bg-follow-season
-# or
-yarn add bg-follow-season
-pnpm add bg-follow-season`}
-              />
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-slate-950/65 backdrop-blur p-5">
-              <h3 className="text-sm font-semibold mb-2">Options</h3>
-              <ul className="text-xs text-slate-200 space-y-1">
-                <li>
-                  <code className="text-amber-200">season</code> – <code>spring | summer | autumn |
-                    winter</code>
-                </li>
-                <li>
-                  <code className="text-amber-200">autoSeason</code> – infer from current date
-                </li>
-                <li>
-                  <code className="text-amber-200">particleCount</code> – density of particles
-                </li>
-                <li>
-                  <code className="text-amber-200">fps</code> – max frames per second
-                </li>
-              </ul>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-slate-950/65 backdrop-blur p-5">
-              <h3 className="text-sm font-semibold mb-2">HTML-only quick start</h3>
-              <CodeBlock
-                code={`<div id="hero" style="min-height:100vh;"></div>
-<script type="module">
-  import { createSeasonalBackground } from 'https://esm.run/bg-follow-season';
-  createSeasonalBackground('#hero');
-</script>`}
-              />
-            </div>
-          </aside>
         </div>
       </main>
     </SeasonBackground>
