@@ -1,11 +1,8 @@
 import { SEASON_THEMES, Season } from './seasons';
-
-// Resolve SVG background URLs relative to the built bundle location.
-// This works both when loaded from a bundler (Vite/Webpack) and from a CDN like unpkg/jsDelivr.
-const springBg = new URL('../assets/spring.svg', import.meta.url).href;
-const summerBg = new URL('../assets/summer.svg', import.meta.url).href;
-const autumnBg = new URL('../assets/autumn.svg', import.meta.url).href;
-const winterBg = new URL('../assets/winter.svg', import.meta.url).href;
+import springBg from '../assets/spring.svg';
+import summerBg from '../assets/summer.svg';
+import autumnBg from '../assets/autumn.svg';
+import winterBg from '../assets/winter.svg';
 
 export interface BgFollowSeasonOptions {
   season?: Season;
