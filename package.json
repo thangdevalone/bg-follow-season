@@ -9,6 +9,7 @@
     "build": "tsup",
     "dev": "vite docs",
     "preview": "vite preview docs",
+    "build:docs": "vite build docs",
     "lint": "eslint \"src/**/*.{ts,tsx,vue}\"",
     "test": "echo \"No tests yet\""
   },
