@@ -1,6 +1,6 @@
 {
   "name": "bg-follow-season",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Seasonal background animation library for HTML/JS, React (TS), and Vue (TS).",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -55,6 +55,6 @@
     "vue": "^3.5.0"
   },
   "dependencies": {
-    "bg-follow-season": "^1.0.1"
+    "bg-follow-season": "^1.0.2"
   }
 }

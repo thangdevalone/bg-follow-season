@@ -14,7 +14,10 @@ export default defineConfig({
   minify: true,
   target: 'es2019',
   external: ['react', 'react-dom', 'vue'],
-  treeshake: true
+  treeshake: true,
+  loader: {
+    '.svg': 'dataurl'
+  }
 });
 
 
